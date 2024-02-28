@@ -12,7 +12,7 @@ AhorrADAs es un proyecto con el objetivo de ofrecer una herramienta intuitiva y 
 
 - **HTML5:** La estructura del proyecto se basa en HTML5, proporcionando una base sólida y semántica para la interfaz de usuario.
 
-- **Tailwind CSS:** Implementamos Tailwind CSS para agilizar el diseño y estilizar la aplicación de manera rápida y consistente.
+- **Tailwind CSS:** Tailwind CSS para agilizar el diseño y estilizar la aplicación de manera rápida y consistente.
 
 - **JavaScript:** La lógica de la aplicación se implementa utilizando JavaScript, permitiendo una interactividad dinámica y una experiencia de usuario fluida.
 
