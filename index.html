@@ -120,14 +120,8 @@
             <a
               class="text-blue-500 text-center"
               href="javascript:void(0)"
-              id="hide-filters"
-              >Ocultar Filtros</a
-            >
-            <a
-              class="relative left-2 text-blue-500 text-center hidden"
-              href="javascript:void(0)"
-              id="show-filters"
-              >Mostrar Filtros</a
+              id="toggle-filters"
+              >Ocultar filtros</a
             >
           </div>
           <!-- FILTER TYPE -->
@@ -153,12 +147,8 @@
                 <div class="relative w-full min-w-[200px] h-10">
                   <select
                     class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
-                  >
-                    <option value="Todas">Todas</option>
-                    <option value="Comida">Comida</option>
-                    <option value="Trabajo">Trabajo</option>
-                    <option value="servicios">Servicios</option>
-                  </select>
+                    id="select-form"
+                  ></select>
                 </div>
               </div>
             </div>
@@ -205,7 +195,7 @@
           <h2 class="mb-8 font-bold text-4xl">Operaciones</h2>
           <button
             class="button h-full text-sm text-white bg-pink-500 hover:bg-pink-600 rounded p-2 ml-2"
-            id="new-operation-button"
+            id="new-operation-btn"
           >
             <span id="add-operation-btn">+ Nueva operación</span>
           </button>
@@ -221,7 +211,7 @@
           </h3>
         </section>
         <!-- WITH OPERATIONS -->
-        <section class="mt-4">
+        <section id="with-operations" class="mt-4">
           <table id="table" class="w-full table-fixed flex-wrap">
             <thead class="head-table md:block">
               <tr class="md:flex md:justify-between">
@@ -243,42 +233,7 @@
               </tr>
             </thead>
             <tbody id="operations-table">
-              <!-- OP RENDER / HARDCODEADAS!!!! EDITAR-->
-              <tr class="flex-wrap flex md:justify-between">
-                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
-                  Category description
-                </td>
-                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
-                  <span
-                    class="category-tag text-xs text-orange-400 bg-orange-100 rounded-md px-2 py-1"
-                    >Category name</span
-                  >
-                </td>
-                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
-                  Fecha
-                </td>
-                <td
-                  class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold"
-                >
-                  Monto $
-                </td>
-                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
-                  <button
-                    class="mr-2 text-xs text-blue-500 bg-rose-200 hover:text-black rounded-md px-2 py-1"
-                    onclick="showEditOpForm()"
-                    id="edit-operation-btn"
-                  >
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
-                  <button
-                    class="text-xs text-blue-500 bg-rose-200 hover:text-black rounded-md px-2 py-1"
-                    onclick="deleteOperation()"
-                    id="deledescription-errorte-operation-button"
-                  >
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <!-- OPERATIONS RENDER -->
             </tbody>
           </table>
         </section>
@@ -299,7 +254,7 @@
             <div class="relative w-full min-w-[200px] h-10">
               <input
                 type="text"
-                id="description"
+                id="operation-name-input"
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
               />
             </div>
@@ -309,7 +264,7 @@
             <div class="relative w-full min-w-[200px] h-10">
               <input
                 type="number"
-                id="amount"
+                id="amount-input"
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
               />
             </div>
@@ -320,8 +275,8 @@
               <select
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
               >
-                <option value="">Gasto</option>
-                <option value="">Ganancia</option>
+                <option value="Gasto">Gasto</option>
+                <option value="Ganancia">Ganancia</option>
               </select>
             </div>
           </div>
@@ -330,8 +285,9 @@
             <div class="relative w-full min-w-[200px] h-10">
               <select
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
+                id="newop-category-select"
               >
-                <option value="">Comida</option>
+                <!-- RENDER -->
               </select>
             </div>
           </div>
@@ -349,7 +305,7 @@
         <div class="flex self-end">
           <button
             class="h-full text-sm text-white bg-yellow-400 hover:bg-yellow-500 rounded p-2 ml-2"
-            id="cancel-operation-button"
+            id="cancel-operation-btn"
           >
             <span id="cancel-newoperation-btn">Cancelar</span>
           </button>
@@ -376,6 +332,7 @@
             <div class="relative w-full min-w-[200px] h-10">
               <input
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
+                id="edit-operation-name-input"
               />
             </div>
           </div>
@@ -385,6 +342,7 @@
               <input
                 type="number"
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
+                id="edit-operation-amount-input"
               />
             </div>
           </div>
@@ -403,8 +361,9 @@
             <div class="relative w-full min-w-[200px] h-10">
               <select
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
+                id="edit-operation-select"
               >
-                <option value="">Comida</option>
+                <!-- RENDER -->
               </select>
             </div>
           </div>
@@ -427,12 +386,14 @@
           <button
             class="h-full text-sm text-white bg-pink-500 hover:bg-pink-600 rounded p-2 ml-2"
           >
-            <span id="add-editoperation-button">Editar</span>
+            <span id="confirm-edit-operation-btn" onclick="editOperation()"
+              >Editar</span
+            >
           </button>
         </div>
       </section>
     </main>
-    <!-------------------- CATEGORIES Section  -------------------->
+    <!-------------------- CATEGORIES Section -------------------->
     <main class="flex items-center min-h-screen hidden" id="categories-section">
       <section
         class="mx-auto md:w-4/5 lg:w-3/4 xl:w-2/3 2xl:w-1/2 p-8 shadow-xl"
@@ -459,7 +420,9 @@
         </div>
         <!-- CATEGORY LIST -->
         <div class="flex justify-between mt-10">
-          <div id="category-list"></div>
+          <div id="category-list">
+            <!-- CATEGORIES RENDER -->
+          </div>
         </div>
       </section>
     </main>
@@ -468,12 +431,10 @@
       class="flex items-center min-h-screen hidden"
       id="edit-category-section"
     >
-      <!-- EDIT CATEGORY SECTION -->
       <section
         class="mx-auto md:w-4/5 lg:w-3/4 xl:w-2/3 2xl:w-1/2 p-8 shadow-xl flex flex-col"
       >
         <h2 class="mb-8 font-bold text-4xl">Editar categoría</h2>
-        <!-- EDIT CATEGORY FORM -->
         <div>
           <h3 class="text-lg font-bold">Nombre</h3>
           <div class="w-full">
@@ -504,7 +465,7 @@
         </div>
       </section>
     </main>
-    <!-------------------- REPORTS Section  -------------------->
+    <!-------------------- REPORTS Section -------------------->
     <!-- NO REPORTS -->
     <main class="hidden" id="no-reports-section">
       <section class="max-w-2xl mx-auto rounded-lg mt-auto min-h-screen">
@@ -694,6 +655,6 @@
       </section>
     </main>
     <!-- Script -->
-    <script src="backup.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>
