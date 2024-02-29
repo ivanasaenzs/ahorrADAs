@@ -65,7 +65,7 @@ const addSelectOptions = (categories) => {
   }
 };
 
-/* Adding the categories to the select form */
+/* Add the categories to the select form in Balance section */
 const addCategoryToSelect = (categories) => {
   cleanContainer("#select-form");
   $("#select-form").innerHTML += `<option value="Todas">Todas</option>`;
@@ -76,7 +76,7 @@ const addCategoryToSelect = (categories) => {
   }
 };
 
-/* Show edit category form and updates to edited value */
+/* Show edit category form and update to edited value */
 const showFormEdit = (categoryId) => {
   hideElement(["#categories-section"]);
   showElement(["#edit-category-section"]);
@@ -95,6 +95,7 @@ const deleteCategory = (categoryId) => {
 
 /* Render categories */
 const renderCategories = (categories) => {
+  console.log("Rendering Categories with data:", categories);
   cleanContainer("#category-list");
   for (const category of categories) {
     $(
@@ -114,6 +115,7 @@ const renderCategories = (categories) => {
             </button>
         </div>
     </div>`;
+    addSelectOptions(categories);
   }
   addCategoryToSelect(categories);
 };
@@ -125,6 +127,7 @@ const addCategory = () => {
     const newCategory = { id: randomId(), categoryName };
     loadedCategoriesFromLocalStorage.push(newCategory);
     setInfo("categories", loadedCategoriesFromLocalStorage);
+    addSelectOptions(loadedCategoriesFromLocalStorage);
     renderCategories(loadedCategoriesFromLocalStorage);
     $("#add-category-input").value = "";
   }
@@ -142,6 +145,7 @@ const cancelEditCategory = () => {
 const editCategory = () => {
   const categoryId = $("#edit-category-input").dataset.id;
   const updatedName = $("#edit-category-input").value;
+
   if (categoryId && updatedName !== "") {
     const updatedCategories = loadedCategoriesFromLocalStorage.map((category) =>
       category.id === categoryId
@@ -154,6 +158,153 @@ const editCategory = () => {
 };
 
 /* OPERATIONS */
+/* Show edit operation form */
+const showEditOpForm = (operationId) => {
+  hideElement(["#balance-section"]);
+  showElement(["#edit-operation-section"]);
+  $("#edit-operation-name-input").setAttribute("data-id", operationId);
+  addSelectOptions(loadedCategoriesFromLocalStorage);
+};
+
+/* Delete operation */
+const deleteOperation = (operationId) => {
+  const updatedOperations = loadedOperationsFromLocalStorage.filter(
+    (operation) => operation.id !== operationId
+  );
+  setInfo("operations", updatedOperations);
+  loadedOperationsFromLocalStorage = updatedOperations;
+  renderOperations(updatedOperations);
+  console.log("Operations after deleting:", loadedOperationsFromLocalStorage);
+  renderOperations(loadedOperationsFromLocalStorage); // borrar
+
+  if (updatedOperations.length === 0) {
+    hideElement(["#with-operations"]);
+    showElement(["#no-operations"]);
+  }
+};
+
+/* Add operation */
+const addOperation = () => {
+  const operationName = $("#new-operation-name-input").value;
+  const operationType = $("#new-operation-filter-type-input").value;
+  const operationAmount = $("#new-operation-amount-input").value;
+  const operationCategory = $("#newop-category-select").value;
+  const operationDate = $("#new-operation-date-input").value;
+  console.log(operationType);
+
+  if (
+    operationName !== "" &&
+    operationType !== "" &&
+    operationAmount !== "" &&
+    operationCategory !== "" &&
+    operationDate !== ""
+  ) {
+    const newOperation = {
+      id: randomId(),
+      operationName,
+      operationType,
+      operationAmount,
+      operationCategory,
+      operationDate,
+    };
+
+    loadedOperationsFromLocalStorage.push(newOperation);
+    setInfo("operations", loadedOperationsFromLocalStorage);
+    renderOperations(loadedOperationsFromLocalStorage);
+  }
+};
+
+/* Edit operation */
+const editOperation = () => {
+  console.log("Edit operation button clicked");
+
+  const operationId = $("#edit-operation-name-input").dataset.id;
+  const updatedName = $("#edit-operation-name-input").value;
+  const updatedAmount = $("#edit-operation-amount-input").value;
+  const updatedCategory = $("#edit-operation-select").value;
+  const updatedDate = $("#edit-operation-date-input").value;
+  const updatedType = $("#edit-operation-type-select").value;
+
+  console.log("Operation ID:", operationId);
+  console.log("Updated Name:", updatedName);
+  console.log("Updated Amount:", updatedAmount);
+  console.log("Updated category:", updatedCategory);
+  console.log("Updated DATE:", updatedDate);
+  console.log("Updated Operation Type:", updatedType);
+
+  if (
+    operationId ||
+    updatedName !== "" ||
+    updatedType !== "" ||
+    updatedAmount !== "" ||
+    updatedCategory !== "" ||
+    updatedDate !== ""
+  ) {
+    const updatedOperations = loadedOperationsFromLocalStorage.map(
+      (operation) =>
+        operation.id === operationId
+          ? {
+              ...operation,
+              operationName: updatedName,
+              operationType: updatedType,
+              operationAmount: updatedAmount,
+              operationCategory: updatedCategory,
+              operationDate: updatedDate,
+            }
+          : operation
+    );
+
+    setInfo("operations", updatedOperations);
+    renderOperations(updatedOperations);
+  }
+  hideElement(["#edit-operation-section"]);
+  showElement(["#balance-section"]);
+};
+
+/* Render operations table */
+const renderOperations = (operations) => {
+  console.log("Rendering Operations: ", operations);
+  cleanContainer("#operations-table");
+
+  for (const operation of operations) {
+    $("#operations-table").innerHTML += `
+       <tr class="flex-wrap flex md:justify-between">
+                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
+                  ${operation.operationName}
+                </td>
+                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
+                  <span
+                    class="category-tag text-xs text-orange-400 bg-orange-100 rounded-md px-2 py-1"
+                    > ${operation.operationCategory}</span
+                  >
+                </td>
+                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
+                 ${operation.operationDate}
+                </td>
+                <td
+                  class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold"
+                >
+                ${operation.operationAmount}
+                </td>
+                <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
+                  <button
+                    class="mr-2 text-xs text-blue-500 bg-rose-200 hover:text-black rounded-md px-2 py-1"
+                    onclick="showEditOpForm('${operation.id}')"
+                    id="edit-operation-btn"
+                  >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                  <button
+                    class="text-xs text-blue-500 bg-rose-200 hover:text-black rounded-md px-2 py-1"
+                    onclick="deleteOperation('${operation.id}')"
+                    id="delete-operation-btn"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>`;
+  }
+};
 
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
@@ -168,6 +319,23 @@ const initialize = () => {
     : [...defaultCategories];
 
   renderCategories(loadedCategoriesFromLocalStorage);
+  renderOperations(loadedOperationsFromLocalStorage);
+  console.log("Operations after adding:", loadedOperationsFromLocalStorage);
+  console.log(
+    "Loaded Operations from LocalStorage:",
+    loadedOperationsFromLocalStorage
+  );
+
+  /* Check if there are operations loaded, if not, render the "No operations" section */
+  const operationsLoaded = getInfo("operations");
+  if (operationsLoaded && operationsLoaded.length > 0) {
+    console.log("Operation(s) available!!");
+    showElement(["#with-operations"]);
+  } else {
+    console.log("No operations found");
+    hideElement(["#with-operations"]);
+    showElement(["#no-operations"]);
+  }
 
   $("#balance-nav").addEventListener("click", () => {
     showElement(["#balance-section"]);
@@ -198,18 +366,42 @@ const initialize = () => {
     ]);
   });
 
+  $("#add-operation-btn").addEventListener("click", () => {
+    showElement(["#new-operation-section"]);
+    hideElement(["#balance-section"]);
+  });
+
+  $("#confirm-edit-operation-btn").addEventListener("click", () => {
+    hideElement(["#edit-operation-section"]);
+    showElement(["#balance-section"]);
+  });
+
+  $("#cancel-newoperation-btn").addEventListener("click", () => {
+    hideElement(["#new-operation-section"]);
+    showElement(["#balance-section"]);
+  });
+
+  $("#cancel-editoperation-btn").addEventListener("click", () => {
+    hideElement(["#edit-operation-section"]);
+    showElement(["#balance-section"]);
+  });
+
   $("#add-category-btn").addEventListener("click", () => {
     addCategory();
   });
 
   $("#confirm-edit-category-btn").addEventListener("click", () => {
-    hideElement(["#edit-category-section"]);
-    showElement(["#categories-section"]);
     cancelEditCategory();
   });
 
   $("#cancel-edit-category-btn").addEventListener("click", () => {
     cancelEditCategory();
+  });
+
+  $("#add-newoperation-btn").addEventListener("click", () => {
+    addOperation();
+    hideElement(["#new-operation-section", "#no-operations"]);
+    showElement(["#balance-section", "#with-operations"]);
   });
 
   $("#toggle-filters").addEventListener("click", filters);
