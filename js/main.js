@@ -267,6 +267,13 @@ const renderOperations = (operations) => {
   cleanContainer("#operations-table");
 
   for (const operation of operations) {
+    let amountClass = "";
+    if (operation.operationType === "Ganancia") {
+      amountClass = "text-green-500";
+    } else if (operation.operationType === "Gasto") {
+      amountClass = "text-red-600";
+    }
+
     $("#operations-table").innerHTML += `
        <tr class="flex-wrap flex md:justify-between">
                 <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
@@ -282,7 +289,7 @@ const renderOperations = (operations) => {
                  ${operation.operationDate}
                 </td>
                 <td
-                  class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold"
+                  class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold ${amountClass}"
                 >
                 ${operation.operationAmount}
                 </td>
@@ -305,6 +312,8 @@ const renderOperations = (operations) => {
               </tr>`;
   }
 };
+
+/****** ******/
 
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
