@@ -9,7 +9,11 @@ const showElement = (selectors) => {
 
 const hideElement = (selectors) => {
   for (const selector of selectors) {
-    $(selector).classList.add("hidden");
+    const element = $(selector);
+    // first check if it exists THEN add class
+    if (element) {
+      element.classList.add("hidden");
+    }
   }
 };
 
@@ -24,6 +28,7 @@ const randomId = () => self.crypto.randomUUID();
 const filters = () => {
   const toggleAction = $("#toggle-filters");
   const filtersContent = $("#filters-content");
+
   if (toggleAction.innerText === "Ocultar filtros") {
     toggleAction.innerText = "Mostrar filtros";
     filtersContent.classList.add("hidden");
@@ -175,7 +180,6 @@ const deleteOperation = (operationId) => {
   loadedOperationsFromLocalStorage = updatedOperations;
   renderOperations(updatedOperations);
   console.log("Operations after deleting:", loadedOperationsFromLocalStorage);
-  renderOperations(loadedOperationsFromLocalStorage); // borrar
 
   if (updatedOperations.length === 0) {
     hideElement(["#with-operations"]);
@@ -267,11 +271,16 @@ const renderOperations = (operations) => {
   cleanContainer("#operations-table");
 
   for (const operation of operations) {
+    /* Add red or green - Plus or minus symbols depending on the type of operation */
     let amountClass = "";
+    let negativeOrPositiveAmount = "";
+
     if (operation.operationType === "Ganancia") {
       amountClass = "text-green-500";
+      negativeOrPositiveAmount = `+${operation.operationAmount}`;
     } else if (operation.operationType === "Gasto") {
       amountClass = "text-red-600";
+      negativeOrPositiveAmount = `-${operation.operationAmount}`;
     }
 
     $("#operations-table").innerHTML += `
@@ -291,7 +300,7 @@ const renderOperations = (operations) => {
                 <td
                   class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold ${amountClass}"
                 >
-                ${operation.operationAmount}
+                 ${negativeOrPositiveAmount}
                 </td>
                 <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
                   <button
@@ -347,32 +356,21 @@ const initialize = () => {
   }
 
   $("#balance-nav").addEventListener("click", () => {
+    console.log("Balance nav clicked");
     showElement(["#balance-section"]);
-    hideElement([
-      "#categories-section",
-      "#reports-section",
-      "#new-operation-section",
-    ]);
+    hideElement(["#categories-section", "#reports-section"]);
   });
 
   $("#categories-nav").addEventListener("click", () => {
+    console.log("Categories nav clicked");
     showElement(["#categories-section"]);
-    hideElement([
-      "#balance-section",
-      "#reports-section",
-      "#new-operation-section",
-      "#edit-operation-section",
-    ]);
+    hideElement(["#balance-section", "#reports-section"]);
   });
 
   $("#reports-nav").addEventListener("click", () => {
+    console.log("Reports nav clicked");
     showElement(["#reports-section"]);
-    hideElement([
-      "#balance-section",
-      "#edit-operation-section",
-      "new-operation-section",
-      "#categories-section",
-    ]);
+    hideElement(["#balance-section", "#categories-section"]);
   });
 
   $("#add-operation-btn").addEventListener("click", () => {
