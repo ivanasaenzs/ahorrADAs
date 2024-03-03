@@ -66,7 +66,7 @@
             id="categories-nav"
           >
             <span class="material-icons"> layers </span>
-            Categorias
+            Categorías
           </a>
           <!-- REPORTS -->
           <a
@@ -90,26 +90,9 @@
       >
         <!-- BALANCE Overview -->
         <article
-          class="w-full sm:h-fit sm:w-fit flex flex-col items-start mx-auto justify-evenly xl:w-full py-5 p-3 shadow-md md:shadow-xl"
+          class="w-full sm:h-fit sm:w-fit flex flex-col items-start mx-auto justify-evenly xl:w-full py-5 p-3 shadow-md md:shadow-xl" id="balance-overview"
         >
-          <div class="md:p-5 w-full flex flex-row justify-start">
-            <h2 class="mb-8 font-bold text-4xl">Balance</h2>
-          </div>
-          <!-- EARNINGS -->
-          <div class="w-full flex justify-between items-center">
-            <h3 class="text-lg lg:text-xl font-bold">Ganancias</h3>
-            <p class="text-xl text-green-300">+$0</p>
-          </div>
-          <!-- EXPENSES -->
-          <div class="w-full flex justify-between items-center">
-            <h3 class="text-lg lg:text-xl font-bold">Gastos</h3>
-            <p class="text-xl text-red-300">-$0</p>
-          </div>
-          <!-- TOTAL -->
-          <div class="w-full flex justify-between items-center">
-            <h3 class="text-2xl font-bold">Total</h3>
-            <p class="text-xl font-bold">+$0</p>
-          </div>
+        <!-- RENDER -->
         </article>
         <!-- FILTERS -->
         <article
@@ -127,7 +110,7 @@
           <!-- FILTER TYPE -->
           <div id="filters-content">
             <div class="w-full flex flex-col justify-evenly items-start">
-              <h3 class="text-lg font-bold">Tipo</h3>
+              <label for="filters-type-input" class="text-lg font-bold">Tipo</label>
               <div class="w-full">
                 <div class="relative w-full min-w-[200px] h-10">
                   <select
@@ -144,33 +127,35 @@
             </div>
             <!-- CATEGORIES FILTER -->
             <div class="w-full flex flex-col justify-evenly items-start">
-              <h3 class="text-lg font-bold">Categorias</h3>
+              <label for="select-form" class="text-lg font-bold">Categorías</label>
               <div class="w-full">
                 <div class="relative w-full min-w-[200px] h-10">
                   <select
                     class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
                     id="select-form"
-                  ></select>
+                  >
+                  <!-- RENDER -->
+                </select>
                 </div>
               </div>
             </div>
-            <!-- SINCE FILTER -->
+            <!-- DATE FILTER -->
             <div class="w-full flex flex-col justify-evenly items-start">
-              <h3 class="text-lg font-bold">Desde</h3>
+              <label for="filter-date-input" class="text-lg font-bold">Desde</label>
               <div class="w-full">
                 <div class="relative w-full min-w-[200px] h-10">
                   <input
                     type="date"
-                    name="filter-since-input"
+                    name="filter-date-input"
                     class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
-                    id="filter-since-input"
+                    id="filter-date-input"
                   />
                 </div>
               </div>
             </div>
             <!-- SORT BY FILTER -->
             <div class="w-full flex flex-col justify-evenly items-start">
-              <h3 class="text-lg font-bold">Ordenar por</h3>
+              <label for="filter-sortby-input" class="text-lg font-bold">Ordenar por</label>
               <div class="w-full">
                 <div class="relative w-full min-w-[200px] h-10">
                   <select
@@ -289,7 +274,6 @@
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
                 id="new-operation-filter-type-input"
               >
-                <option value="Seleccionar" selected disabled>Seleccionar</option>
                 <option value="Gasto">Gasto</option>
                 <option value="Ganancia">Ganancia</option>
               </select>
@@ -375,7 +359,6 @@
                 class="peer w-full h-full bg-transparent text-pink-700 font-sans font-normal outline-pink-600 transition-all border focus:border text-sm px-3 py-2.5 rounded-[7px] border-pink-600 focus:border-pink-900"
                 id="edit-operation-type-select"
               >
-                <option value="Seleccionar" selected disabled>Seleccionar</option>
                 <option value="Gasto">Gasto</option>
                 <option value="Ganancia">Ganancia</option>
               </select>
