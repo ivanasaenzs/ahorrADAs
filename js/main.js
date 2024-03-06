@@ -24,6 +24,16 @@ const cleanContainer = (selector) => {
 /* Random ID generator */
 const randomId = () => self.crypto.randomUUID();
 
+/* Default categories */
+const defaultCategories = [
+  { id: randomId(), categoryName: "Comida" },
+  { id: randomId(), categoryName: "Servicios" },
+  { id: randomId(), categoryName: "Salud" },
+  { id: randomId(), categoryName: "Educación" },
+  { id: randomId(), categoryName: "Transporte" },
+  { id: randomId(), categoryName: "Trabajo" },
+];
+
 /* Toggle filters section */
 const filters = () => {
   const toggleAction = $("#toggle-filters");
@@ -37,16 +47,6 @@ const filters = () => {
     filtersContent.classList.remove("hidden");
   }
 };
-
-/* Default categories */
-const defaultCategories = [
-  { id: randomId(), categoryName: "Comida" },
-  { id: randomId(), categoryName: "Servicios" },
-  { id: randomId(), categoryName: "Salud" },
-  { id: randomId(), categoryName: "Educación" },
-  { id: randomId(), categoryName: "Transporte" },
-  { id: randomId(), categoryName: "Trabajo" },
-];
 
 /* Local storage */
 const setInfo = (key, info) => localStorage.setItem(key, JSON.stringify(info));
@@ -107,7 +107,7 @@ const renderCategories = (categories) => {
       "#category-list"
     ).innerHTML += `<div class="flex items-center justify-between mb-2">
         <div class="flex items-center">
-            <span class="category-tag text-xs text-orange-400 bg-orange-100 rounded-md px-2 py-1">${category.categoryName}</span>
+            <span class="category-tag text-xs text-orange-400 bg-orange-100 rounded-md px-2 py-1" id="${category.id}">${category.categoryName}</span>
         </div>
         <div class="flex items-center">
             <button class="text-xs text-blue-500 bg-rose-200 hover:text-black rounded-md px-2 py-1 ml-auto"
@@ -150,7 +150,6 @@ const cancelEditCategory = () => {
 const editCategory = () => {
   const categoryId = $("#edit-category-input").dataset.id;
   const updatedName = $("#edit-category-input").value;
-
   if (categoryId && updatedName !== "") {
     const updatedCategories = loadedCategoriesFromLocalStorage.map((category) =>
       category.id === categoryId
@@ -160,6 +159,60 @@ const editCategory = () => {
     setInfo("categories", updatedCategories);
     renderCategories(updatedCategories);
   }
+};
+
+/* BALANCE */
+/* Render balance overview */
+const renderBalanceOverview = () => {
+  let totalEarnings = 0;
+  let totalExpenses = 0;
+
+  loadedOperationsFromLocalStorage.forEach((operation) => {
+    if (operation.operationType === "Ganancia") {
+      totalEarnings += Number(operation.operationAmount);
+    } else if (operation.operationType === "Gasto") {
+      totalExpenses += Number(operation.operationAmount);
+    }
+  });
+
+  const totalBalance = totalEarnings - totalExpenses;
+  const balanceOverviewSection = $("#balance-overview");
+
+  console.log("Total earnings are: ", `+$${totalEarnings}`);
+  console.log("Total expenses are: ", `-$${totalExpenses}`);
+  console.log("The total balance is: ", `$${totalBalance}`);
+
+  balanceOverviewSection.innerHTML = `<div class="md:p-5 w-full flex flex-row justify-start">
+            <h2 class="mb-8 font-bold text-4xl">Balance</h2>
+          </div>
+          <!-- EARNINGS -->
+          <div class="w-full flex justify-between items-center">
+            <h3 class="text-lg lg:text-xl font-bold">Ganancias</h3>
+            <p class="text-xl text-green-500">${
+              totalEarnings === 0 ? "" : "+"
+            }$${Math.abs(totalEarnings)}</p>
+          </div>
+          <!-- EXPENSES -->
+          <div class="w-full flex justify-between items-center">
+            <h3 class="text-lg lg:text-xl font-bold">Gastos</h3>
+            <p class="text-xl text-red-600">${
+              totalExpenses === 0 ? "" : "-"
+            }$${Math.abs(totalExpenses)}</p>
+          </div>
+          <!-- TOTAL -->
+          <div class="w-full flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Total</h3>
+            <p class="text-xl font-bold ${
+              totalBalance >= 0 ? "text-green-500" : "text-red-600"
+            }">${
+    totalBalance === 0
+      ? "0"
+      : totalBalance > 0
+      ? `+$${Math.abs(totalBalance)}`
+      : `-$${Math.abs(totalBalance)}`
+  }
+            </p>
+          </div>`;
 };
 
 /* OPERATIONS */
@@ -179,6 +232,7 @@ const deleteOperation = (operationId) => {
   setInfo("operations", updatedOperations);
   loadedOperationsFromLocalStorage = updatedOperations;
   renderOperations(updatedOperations);
+  renderBalanceOverview();
   console.log("Operations after deleting:", loadedOperationsFromLocalStorage);
 
   if (updatedOperations.length === 0) {
@@ -194,7 +248,7 @@ const addOperation = () => {
   const operationAmount = $("#new-operation-amount-input").value;
   const operationCategory = $("#newop-category-select").value;
   const operationDate = $("#new-operation-date-input").value;
-  console.log(operationType);
+  console.log(operationDate);
 
   if (
     operationName !== "" &&
@@ -215,6 +269,7 @@ const addOperation = () => {
     loadedOperationsFromLocalStorage.push(newOperation);
     setInfo("operations", loadedOperationsFromLocalStorage);
     renderOperations(loadedOperationsFromLocalStorage);
+    renderBalanceOverview();
   }
 };
 
@@ -260,6 +315,7 @@ const editOperation = () => {
 
     setInfo("operations", updatedOperations);
     renderOperations(updatedOperations);
+    renderBalanceOverview();
   }
   hideElement(["#edit-operation-section"]);
   showElement(["#balance-section"]);
@@ -267,9 +323,8 @@ const editOperation = () => {
 
 /* Render operations table */
 const renderOperations = (operations) => {
-  console.log("Rendering Operations: ", operations);
+  console.log("Rendering Operations with data:", operations);
   cleanContainer("#operations-table");
-
   for (const operation of operations) {
     /* Add red or green - Plus or minus symbols depending on the type of operation */
     let amountClass = "";
@@ -277,14 +332,14 @@ const renderOperations = (operations) => {
 
     if (operation.operationType === "Ganancia") {
       amountClass = "text-green-500";
-      negativeOrPositiveAmount = `+${operation.operationAmount}`;
+      negativeOrPositiveAmount = `+$${operation.operationAmount}`;
     } else if (operation.operationType === "Gasto") {
       amountClass = "text-red-600";
-      negativeOrPositiveAmount = `-${operation.operationAmount}`;
+      negativeOrPositiveAmount = `-$${operation.operationAmount}`;
     }
 
     $("#operations-table").innerHTML += `
-       <tr class="flex-wrap flex md:justify-between">
+       <tr class="flex-wrap flex md:justify-between" id="operation-${operation.id}">
                 <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
                   ${operation.operationName}
                 </td>
@@ -300,7 +355,7 @@ const renderOperations = (operations) => {
                 <td
                   class="px-4 py-2 md:w-1/5 md:flex md:justify-start font-bold ${amountClass}"
                 >
-                 ${negativeOrPositiveAmount}
+                ${negativeOrPositiveAmount}
                 </td>
                 <td class="px-4 py-2 md:w-1/5 md:flex md:justify-start">
                   <button
@@ -322,8 +377,6 @@ const renderOperations = (operations) => {
   }
 };
 
-/****** ******/
-
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
   const hasDefaultCategories = getInfo("hasDefaultCategories");
@@ -338,11 +391,8 @@ const initialize = () => {
 
   renderCategories(loadedCategoriesFromLocalStorage);
   renderOperations(loadedOperationsFromLocalStorage);
+  renderBalanceOverview();
   console.log("Operations after adding:", loadedOperationsFromLocalStorage);
-  console.log(
-    "Loaded Operations from LocalStorage:",
-    loadedOperationsFromLocalStorage
-  );
 
   /* Check if there are operations loaded, if not, render the "No operations" section */
   const operationsLoaded = getInfo("operations");
@@ -374,21 +424,32 @@ const initialize = () => {
   });
 
   $("#add-operation-btn").addEventListener("click", () => {
+    console.log("Add new operation (FORM) button clicked");
     showElement(["#new-operation-section"]);
     hideElement(["#balance-section"]);
   });
 
-  $("#confirm-edit-operation-btn").addEventListener("click", () => {
-    hideElement(["#edit-operation-section"]);
-    showElement(["#balance-section"]);
+  $("#add-newoperation-btn").addEventListener("click", () => {
+    console.log("Add new operation (CONFIRMATION) button clicked");
+    addOperation();
+    hideElement(["#new-operation-section", "#no-operations"]);
+    showElement(["#balance-section", "#with-operations"]);
   });
 
   $("#cancel-newoperation-btn").addEventListener("click", () => {
+    console.log("Cancel new operation button clicked");
     hideElement(["#new-operation-section"]);
     showElement(["#balance-section"]);
   });
 
+  $("#confirm-edit-operation-btn").addEventListener("click", () => {
+    console.log("Edit operation button clicked");
+    hideElement(["#edit-operation-section"]);
+    showElement(["#balance-section"]);
+  });
+
   $("#cancel-editoperation-btn").addEventListener("click", () => {
+    console.log("CANCEL edit operation button clicked");
     hideElement(["#edit-operation-section"]);
     showElement(["#balance-section"]);
   });
@@ -405,12 +466,7 @@ const initialize = () => {
     cancelEditCategory();
   });
 
-  $("#add-newoperation-btn").addEventListener("click", () => {
-    addOperation();
-    hideElement(["#new-operation-section", "#no-operations"]);
-    showElement(["#balance-section", "#with-operations"]);
-  });
-
+  /* Hide-show filter section in Balance */
   $("#toggle-filters").addEventListener("click", filters);
 
   // ABRIR DROPDOWN EN MOBILE
@@ -423,11 +479,6 @@ const initialize = () => {
   $(".xmark").addEventListener("click", () => {
     showElement([".bars"]);
     hideElement([".xmark", "#menu-dropdown"]);
-  });
-
-  $("#add-operation-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    // $("#form").reset();
   });
 };
 
