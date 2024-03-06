@@ -176,13 +176,14 @@ const renderBalanceOverview = () => {
   });
 
   const totalBalance = totalEarnings - totalExpenses;
-  const balanceOverviewSection = $("#balance-overview");
 
   console.log("Total earnings are: ", `+$${totalEarnings}`);
   console.log("Total expenses are: ", `-$${totalExpenses}`);
   console.log("The total balance is: ", `$${totalBalance}`);
 
-  balanceOverviewSection.innerHTML = `<div class="md:p-5 w-full flex flex-row justify-start">
+  $(
+    "#balance-overview"
+  ).innerHTML = `<div class="md:p-5 w-full flex flex-row justify-start">
             <h2 class="mb-8 font-bold text-4xl">Balance</h2>
           </div>
           <!-- EARNINGS -->
