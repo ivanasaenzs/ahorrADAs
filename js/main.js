@@ -207,7 +207,7 @@ const renderBalanceOverview = () => {
               totalBalance >= 0 ? "text-green-500" : "text-red-600"
             }">${
     totalBalance === 0
-      ? "0"
+      ? "$0"
       : totalBalance > 0
       ? `+$${Math.abs(totalBalance)}`
       : `-$${Math.abs(totalBalance)}`
