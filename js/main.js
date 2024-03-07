@@ -322,7 +322,7 @@ const editOperation = () => {
   showElement(["#balance-section"]);
 };
 
-/* Render operations table */
+// Render operations table
 const renderOperations = (operations) => {
   console.log("Rendering Operations with data:", operations);
   cleanContainer("#operations-table");
@@ -375,6 +375,34 @@ const renderOperations = (operations) => {
                   </button>
                 </td>
               </tr>`;
+  }
+};
+
+// FILTER OPERATIONS
+// Filter operation type: Earning - Expense
+const filteringOperationType = () => {
+  const operationTypeSelected = $("#filters-type-input").value;
+  console.log(operationTypeSelected);
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const operationElement = $(`#operation-${operation.id}`);
+    console.log(operationElement);
+
+    if (operationElement) {
+      if (
+        operationTypeSelected === "Ganancia" &&
+        operation.operationType === "Gasto"
+      ) {
+        operationElement.style.display = "none";
+      } else if (
+        operationTypeSelected === "Gasto" &&
+        operation.operationType === "Ganancia"
+      ) {
+        operationElement.style.display = "none";
+      } else {
+        operationElement.style.display = "flex";
+      }
+    }
   }
 };
 
@@ -469,6 +497,9 @@ const initialize = () => {
 
   /* Hide-show filter section in Balance */
   $("#toggle-filters").addEventListener("click", filters);
+
+  // Filtering operations
+  $("#filters-type-input").addEventListener("change", filteringOperationType);
 
   // ABRIR DROPDOWN EN MOBILE
   $(".bars").addEventListener("click", () => {
