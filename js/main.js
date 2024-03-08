@@ -378,9 +378,9 @@ const renderOperations = (operations) => {
   }
 };
 
-// FILTER OPERATIONS
-// Filter operation type: Earning - Expense
-const filteringOperationType = () => {
+// FILTER OPERATIONS based on user selection
+// Filter by operatiion type: Earning - Expense
+const filterOperationType = () => {
   const operationTypeSelected = $("#filters-type-input").value;
   console.log(operationTypeSelected);
 
@@ -402,6 +402,49 @@ const filteringOperationType = () => {
       } else {
         operationElement.style.display = "flex";
       }
+    }
+  }
+};
+
+// Filter operation category: depending on the category selected
+const filterOperationCategory = () => {
+  const operationCategorySelected = $("#select-form").value;
+  console.log(operationCategorySelected);
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const categoryElement = $(`#operation-${operation.id}`);
+    console.log(categoryElement);
+    console.log(operation.operationCategory);
+
+    // only enters the conditional if the element exists
+    if (categoryElement) {
+      if (operationCategorySelected === "Todas") {
+        categoryElement.style.display = "flex";
+      } else if (operationCategorySelected === operation.operationCategory) {
+        categoryElement.style.display = "flex";
+      } else if (operationCategorySelected !== operation.operationCategory) {
+        // hides all the ops ?? should render no operations section
+        categoryElement.style.display = "none";
+      }
+    }
+  }
+};
+
+/* Filter operation date: from the selected date onward */
+const filterOperationDate = () => {
+  const operationDateSelected = new Date($("#filter-date-input").value);
+  console.log(operationDateSelected);
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const operationElement = $(`#operation-${operation.id}`);
+    console.log(operationElement);
+    const operationDate = new Date(operation.operationDate);
+    console.log(operationDate);
+
+    if (operationDate >= operationDateSelected) {
+      operationElement.style.display = "flex";
+    } else {
+      operationElement.style.display = "none";
     }
   }
 };
@@ -495,11 +538,13 @@ const initialize = () => {
     cancelEditCategory();
   });
 
-  /* Hide-show filter section in Balance */
+  // Hide-show filter section in Balance
   $("#toggle-filters").addEventListener("click", filters);
 
-  // Filtering operations
-  $("#filters-type-input").addEventListener("change", filteringOperationType);
+  // Filter operations
+  $("#filters-type-input").addEventListener("change", filterOperationType);
+  $("#select-form").addEventListener("change", filterOperationCategory);
+  $("#filter-date-input").addEventListener("input", filterOperationDate);
 
   // ABRIR DROPDOWN EN MOBILE
   $(".bars").addEventListener("click", () => {
