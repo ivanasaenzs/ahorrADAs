@@ -3,7 +3,11 @@ const $ = (selector) => document.querySelector(selector);
 
 const showElement = (selectors) => {
   for (const selector of selectors) {
-    $(selector).classList.remove("hidden");
+    const element = $(selector);
+    // first check if it exists THEN remove class
+    if (element) {
+      $(selector).classList.remove("hidden");
+    }
   }
 };
 
@@ -26,13 +30,20 @@ const randomId = () => self.crypto.randomUUID();
 
 /* Default categories */
 const defaultCategories = [
-  { id: randomId(), categoryName: "Comida" },
-  { id: randomId(), categoryName: "Servicios" },
-  { id: randomId(), categoryName: "Salud" },
-  { id: randomId(), categoryName: "Educación" },
-  { id: randomId(), categoryName: "Transporte" },
-  { id: randomId(), categoryName: "Trabajo" },
+  { id: randomId(), categoryName: "comida" },
+  { id: randomId(), categoryName: "servicios" },
+  { id: randomId(), categoryName: "salud" },
+  { id: randomId(), categoryName: "educación" },
+  { id: randomId(), categoryName: "transporte" },
+  { id: randomId(), categoryName: "trabajo" },
 ];
+
+/* LOCAL STORAGE */
+const setInfo = (key, info) => localStorage.setItem(key, JSON.stringify(info));
+const getInfo = (key) => JSON.parse(localStorage.getItem(key));
+
+let loadedCategoriesFromLocalStorage = getInfo("categories") || [];
+let loadedOperationsFromLocalStorage = getInfo("operations") || [];
 
 /* Toggle filters section */
 const filters = () => {
@@ -48,14 +59,8 @@ const filters = () => {
   }
 };
 
-/* Local storage */
-const setInfo = (key, info) => localStorage.setItem(key, JSON.stringify(info));
-const getInfo = (key) => JSON.parse(localStorage.getItem(key));
-
-let loadedCategoriesFromLocalStorage = getInfo("categories") || [];
-let loadedOperationsFromLocalStorage = getInfo("operations") || [];
-
-/* Add category options to New Operation & Edit Operation selects */
+/************************* CATEGORIES ********************************/
+// Add category options to New Operation & Edit Operation selects
 const addSelectOptions = (categories) => {
   $("#newop-category-select").innerHTML = "";
   $("#edit-operation-select").innerHTML = "";
@@ -70,10 +75,11 @@ const addSelectOptions = (categories) => {
   }
 };
 
-/* Add the categories to the select form in Balance section */
+// Add the categories to the select form in Balance section
 const addCategoryToSelect = (categories) => {
   cleanContainer("#select-form");
   $("#select-form").innerHTML += `<option value="Todas">Todas</option>`;
+
   for (const category of categories) {
     $(
       "#select-form"
@@ -81,14 +87,14 @@ const addCategoryToSelect = (categories) => {
   }
 };
 
-/* Show edit category form and update to edited value */
+// Show edit category form and update to edited value
 const showFormEdit = (categoryId) => {
   hideElement(["#categories-section"]);
   showElement(["#edit-category-section"]);
   $("#edit-category-input").setAttribute("data-id", categoryId);
 };
 
-/* Delete category */
+// Delete category
 const deleteCategory = (categoryId) => {
   const updatedCategories = loadedCategoriesFromLocalStorage.filter(
     (category) => category.id !== categoryId
@@ -98,7 +104,7 @@ const deleteCategory = (categoryId) => {
   renderCategories(updatedCategories);
 };
 
-/* Render categories */
+// Render categories
 const renderCategories = (categories) => {
   console.log("Rendering Categories with data:", categories);
   cleanContainer("#category-list");
@@ -125,7 +131,7 @@ const renderCategories = (categories) => {
   addCategoryToSelect(categories);
 };
 
-/* Add category */
+// Add category
 const addCategory = () => {
   const categoryName = $("#add-category-input").value;
   if (categoryName !== "") {
@@ -138,15 +144,7 @@ const addCategory = () => {
   }
 };
 
-/* Cancel edit operation */
-const cancelEditCategory = () => {
-  $("#edit-category-input").value = "";
-  $("#edit-category-input").removeAttribute("data-id");
-  hideElement(["#edit-category-section"]);
-  showElement(["#categories-section"]);
-};
-
-/* Edit category */
+// Edit category
 const editCategory = () => {
   const categoryId = $("#edit-category-input").dataset.id;
   const updatedName = $("#edit-category-input").value;
@@ -161,8 +159,16 @@ const editCategory = () => {
   }
 };
 
-/* BALANCE */
-/* Render balance overview */
+// Cancel edit operation
+const cancelEditCategory = () => {
+  $("#edit-category-input").value = "";
+  $("#edit-category-input").removeAttribute("data-id");
+  hideElement(["#edit-category-section"]);
+  showElement(["#categories-section"]);
+};
+
+/************************* BALANCE ********************************/
+// Render balance overview
 const renderBalanceOverview = () => {
   let totalEarnings = 0;
   let totalExpenses = 0;
@@ -216,8 +222,8 @@ const renderBalanceOverview = () => {
           </div>`;
 };
 
-/* OPERATIONS */
-/* Show edit operation form */
+/************************* OPERATIONS ********************************/
+// Show edit operation form
 const showEditOpForm = (operationId) => {
   hideElement(["#balance-section"]);
   showElement(["#edit-operation-section"]);
@@ -225,7 +231,7 @@ const showEditOpForm = (operationId) => {
   addSelectOptions(loadedCategoriesFromLocalStorage);
 };
 
-/* Delete operation */
+// Delete operation
 const deleteOperation = (operationId) => {
   const updatedOperations = loadedOperationsFromLocalStorage.filter(
     (operation) => operation.id !== operationId
@@ -242,7 +248,7 @@ const deleteOperation = (operationId) => {
   }
 };
 
-/* Add operation */
+// Add operation
 const addOperation = () => {
   const operationName = $("#new-operation-name-input").value;
   const operationType = $("#new-operation-filter-type-input").value;
@@ -274,7 +280,7 @@ const addOperation = () => {
   }
 };
 
-/* Edit operation */
+// Edit operation
 const editOperation = () => {
   console.log("Edit operation button clicked");
 
@@ -379,7 +385,7 @@ const renderOperations = (operations) => {
 };
 
 // FILTER OPERATIONS based on user selection
-// Filter by operatiion type: Earning - Expense
+// Filter by operation type: Earning - Expense
 const filterOperationType = () => {
   const operationTypeSelected = $("#filters-type-input").value;
   console.log(operationTypeSelected);
@@ -430,7 +436,7 @@ const filterOperationCategory = () => {
   }
 };
 
-/* Filter operation date: from the selected date onward */
+// Filter operation date: from the selected date onward
 const filterOperationDate = () => {
   const operationDateSelected = new Date($("#filter-date-input").value);
   console.log(operationDateSelected);
@@ -449,8 +455,41 @@ const filterOperationDate = () => {
   }
 };
 
+// Sort by the arrays of operations according to specific conditions
+const sortingFunctions = {
+  "mas-reciente": (a, b) =>
+    new Date(b.operationDate) - new Date(a.operationDate),
+  "menos-reciente": (a, b) =>
+    new Date(a.operationDate) - new Date(b.operationDate),
+  "mayor-monto": (a, b) => b.operationAmount - a.operationAmount,
+  "menor-monto": (a, b) => a.operationAmount - b.operationAmount,
+  az: (a, b) => a.operationName.localeCompare(b.operationName),
+  za: (a, b) => b.operationName.localeCompare(a.operationName),
+};
+
+// Function that does the actual sortering
+const sortingFunction = (operations, sortCondition) => {
+  // I make a copy of the original array so the sort() method doesn't modify it
+  const sortedOperations = [...operations];
+  return sortedOperations.sort(sortingFunctions[sortCondition]);
+};
+
+// Pass the operation and condition selected as arguments and render result
+const sortByOperations = () => {
+  const sortBySelected = $("#filter-sortby-input").value;
+
+  const sortedOperations = sortingFunction(
+    loadedOperationsFromLocalStorage,
+    sortBySelected
+  );
+  renderOperations(sortedOperations);
+};
+
+/************************* REPORTS ********************************/
+
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
+  // sets my object of hardcoded categories as default so they appear every time even if local storage is deleted
   const hasDefaultCategories = getInfo("hasDefaultCategories");
   if (!hasDefaultCategories) {
     setInfo("categories", defaultCategories);
@@ -545,14 +584,15 @@ const initialize = () => {
   $("#filters-type-input").addEventListener("change", filterOperationType);
   $("#select-form").addEventListener("change", filterOperationCategory);
   $("#filter-date-input").addEventListener("input", filterOperationDate);
+  $("#filter-sortby-input").addEventListener("change", sortByOperations);
 
-  // ABRIR DROPDOWN EN MOBILE
+  // Open dropdown menu in mobile
   $(".bars").addEventListener("click", () => {
     showElement([".xmark", "#menu-dropdown"]);
     hideElement([".bars"]);
   });
 
-  // CERRAR DROPDOWN EN MOBILE
+  // Close dropdown menu in mobile
   $(".xmark").addEventListener("click", () => {
     showElement([".bars"]);
     hideElement([".xmark", "#menu-dropdown"]);
