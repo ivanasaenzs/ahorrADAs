@@ -406,12 +406,11 @@
     </main>
     <!-------------------- CATEGORIES Section -------------------->
     <main class="flex items-center min-h-screen hidden" id="categories-section">
-      <section
+      <form
         class="mx-auto md:w-4/5 lg:w-3/4 xl:w-2/3 2xl:w-1/2 p-8 shadow-xl"
       >
         <h2 class="mb-8 font-bold text-4xl">Categorías</h2>
         <label for="add-category-input" class="font-semibold">Nombre</label>
-        <!-- ADD CATEGORY FORM -->
         <div class="flex mt-1 mb-4">
           <div class="flex-grow">
             <input
@@ -429,25 +428,24 @@
             </button>
           </div>
         </div>
-        <!-- CATEGORY LIST -->
         <div class="flex justify-between mt-10">
           <div id="category-list">
             <!-- CATEGORIES RENDER -->
           </div>
         </div>
-      </section>
+      </form>
     </main>
     <!-- EDIT CATEGORY Section -->
     <main
       class="flex items-center min-h-screen hidden"
       id="edit-category-section"
     >
-      <section
+      <form
         class="mx-auto md:w-4/5 lg:w-3/4 xl:w-2/3 2xl:w-1/2 p-8 shadow-xl flex flex-col"
       >
         <h2 class="mb-8 font-bold text-4xl">Editar categoría</h2>
         <div>
-          <h3 class="text-lg font-bold">Nombre</h3>
+          <label for="edit-category-input" class="text-lg font-bold">Nombre</label>
           <div class="w-full">
             <div class="relative w-full min-w-[200px] h-10">
               <input
@@ -457,7 +455,6 @@
             </div>
           </div>
         </div>
-        <!-- EDIT CATEGORY ACTIONS -->
         <div class="flex self-end mt-2">
           <button
             class="h-full text-sm text-white bg-pink-500 hover:bg-pink-600 rounded p-2 ml-2"
@@ -474,7 +471,7 @@
             Cancelar
           </button>
         </div>
-    </section>
+    </form>
     </main>
     <!-------------------- REPORTS Section -------------------->
     <!-- NO REPORTS -->
@@ -606,9 +603,7 @@
                   <!-- RENDER -->
                 </div>
               </div>
-              <!-- DETAILED RESUME SECTION -->
               <div class="w-3/4 flex space-x-4">
-                <!-- PROFIT -->
                 <div class="flex-1 text-right">
                   <h4 class="font-semibold">Ganancias</h4>
                   <div
