@@ -504,98 +504,77 @@
     <main class="mx-auto my-12 hidden" id="reports-section">
       <section
         class="mx-auto max-w-6xl rounded-lg p-8 lg:p-12 xl:p-16"
-        id="with-reports-section"
       >
         <h2 class="mb-4 font-black text-4xl lg:text-5xl">Reportes</h2>
         <div
           class="mx-auto mt-8 lg:mt-12 xl:mt-16 p-4 lg:p-8 xl:p-12 shadow-xl"
         >
-          <!-- DETAILS -->
           <section class="space-y-4">
             <h4 class="text-lg font-semibold">Resumen</h4>
-            <!-- HIGHEST PROFIT CATEGORY -->
+            <!-- HIGHEST EARNING CATEGORY -->
             <div class="flex items-center p-1">
               <div class="font-semibold w-1/4">
                 Categoría con mayor ganancia
               </div>
               <div class="flex-1 text-right" id="categoria-mayor-ganancia">
-                <!-- CATEGORY RENDER -->
+             <!-- RENDER -->
               </div>
             </div>
-            <!-- HIGHEST SPENDING CATEGORY -->
+            <!-- HIGHEST EXPENSE CATEGORY -->
             <div class="flex items-center p-1">
               <div class="font-semibold w-1/4">Categoría con mayor gasto</div>
               <div class="flex-1 text-right" id="categoria-mayor-gasto">
-                <!-- CATEGORY RENDER -->
+                 <!-- RENDER -->
               </div>
             </div>
             <!-- GREATER BALANCE CATEGORY -->
             <div class="flex items-center p-1">
               <div class="font-semibold w-1/4">Categoría con mayor balance</div>
               <div class="flex-1 text-right" id="categoria-mayor-balance">
-                <div class="flex items-center justify-between">
-                  <div class="w-2/3">
-                    <span
-                      class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden"
-                      >Category placeholder</span
-                    >
-                  </div>
-                  <div class="w-1/3 flex items-end justify-end">
-                    <span
-                      class="whitespace-nowrap overflow-hidden"
-                      id="categoria-mayor-balance-total"
-                      >$50000</span
-                    >
-                  </div>
-                </div>
+                      <!-- RENDER -->
               </div>
             </div>
-            <!-- HIGHEST PROFIT MONTH CATEGORY -->
+            <!-- HIGHEST EARNING MONTH -->
             <div class="flex items-center p-1">
               <div class="font-semibold w-1/4">Mes con mayor ganancia</div>
               <div class="flex-1 text-right" id="mes-mayor-ganancia">
-                <!--  CATEGORY RENDER -->
+                  <!-- RENDER -->
               </div>
             </div>
-            <!-- HIGHEST SPENDING CATEGORY -->
+            <!-- HIGHEST EXPENSES MONTH -->
             <div class="flex items-center p-1">
               <div class="font-semibold w-1/4">Mes con mayor gasto</div>
               <div class="flex-1 text-right" id="mes-mayor-gasto">
-                <!-- CATEGORY RENDER -->
+                      <!-- RENDER -->
               </div>
             </div>
           </section>
-          <!-- TOTALS BY CATEGORY -->
+                    <!-- TOTALS BY CATEGORY -->
           <section class="space-y-4">
             <h4 class="text-lg font-semibold mt-12 pb-2">
               Totales por categoría
             </h4>
             <div class="flex items-center">
-              <!-- CATEGORY SECTION -->
               <div class="w-1/4">
                 <h4 class="font-semibold pb-2">Categoría</h4>
-                <div class="flex items-center pt-2" id="totales-por-categoria">
-                       <span class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden">
-      </span>
-                </div>
+                <div class="flex flex-col items-start pt-2" id="totales-por-categoria">
+                       <!-- RENDER -->
+                </div> 
               </div>
-              <!-- DETAILED OVERVIEW SECTION -->
               <div class="w-3/4 flex space-x-4">
-                <!-- PROFIT -->
                 <div class="flex-1">
                   <h4 class="pb-2 font-semibold text-right">Ganancias</h4>
                   <div
-                    class="flex items-center justify-end p-2 text-green-600"
+                    class="flex flex-col items-end justify-end p-2 text-green-600"
                     id="totales-categoria-ganancias"
                   >
                     <!-- RENDER -->
                   </div>
                 </div>
-                <!-- EXPENSES -->
                 <div class="flex-1">
                   <h4 class="font-semibold text-right pb-2">Gastos</h4>
                   <div
-                    class="flex items-center justify-end pt-2 text-red-600"
+                    class="flex flex-col items-end justify-end pt-2 text-red-600"
                     id="totales-categoria-gastos"
                   >
                     <!-- -RENDER -->
@@ -605,7 +584,7 @@
                 <div class="flex-1">
                   <h4 class="font-semibold text-right pb-2">Balance</h4>
                   <div
-                    class="flex items-center justify-end pt-2"
+                    class="flex flex-col items-end justify-end pt-2"
                     id="totales-categoria-balance"
                   >
                     <!--  RENDER -->
@@ -618,11 +597,10 @@
           <section class="space-y-4">
             <h3 class="text-lg font-semibold mt-12">Totales por mes</h3>
             <div class="flex items-center">
-              <!-- MONTH SECTION -->
               <div class="w-1/4">
                 <h4 class="font-semibold">Mes</h4>
                 <div
-                  class="flex items-center pt-2 font-semibold"
+                  class="flex flex-col items-start pt-2 font-semibold"
                   id="totales-mes"
                 >
                   <!-- RENDER -->
@@ -634,7 +612,7 @@
                 <div class="flex-1 text-right">
                   <h4 class="font-semibold">Ganancias</h4>
                   <div
-                    class="flex items-center justify-end pt-2 text-green-600"
+                    class="flex flex-col items-end justify-end pt-2 text-green-600"
                     id="totales-mes-ganancias"
                   >
                     <!-- RENDER -->
@@ -644,7 +622,7 @@
                 <div class="flex-1 text-right">
                   <h4 class="font-semibold">Gastos</h4>
                   <div
-                    class="flex items-center justify-end pt-2 text-red-600"
+                    class="flex flex-col items-end justify-end pt-2 text-red-600"
                     id="totales-mes-gastos"
                   >
                     <!-- RENDER -->
@@ -654,7 +632,7 @@
                 <div class="flex-1 text-right">
                   <h4 class="font-semibold">Balance</h4>
                   <div
-                    class="flex items-center justify-end pt-2"
+                    class="flex flex-col items-end justify-end pt-2"
                     id="totales-mes-balance"
                   >
                     <!-- RENDER -->
