@@ -486,6 +486,21 @@ const sortByOperations = () => {
 };
 
 /************************* REPORTS ********************************/
+// Render reports
+const renderReportsSection = () => {
+  if (
+    loadedOperationsFromLocalStorage &&
+    loadedOperationsFromLocalStorage.length > 0
+  ) {
+    // show the reports section
+    showElement(["#reports-section"]);
+    hideElement(["#no-reports-section"]);
+  } else {
+    // no operations exist, hide the reports section and show the no reports message
+    hideElement(["#reports-section"]);
+    showElement(["#no-reports-section"]);
+  }
+};
 
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
@@ -597,6 +612,9 @@ const initialize = () => {
     showElement([".bars"]);
     hideElement([".xmark", "#menu-dropdown"]);
   });
+
+  // Render reports section
+  renderReportsSection(loadedOperationsFromLocalStorage);
 };
 
 window.addEventListener("load", initialize);
