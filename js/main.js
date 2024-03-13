@@ -486,12 +486,60 @@ const sortByOperations = () => {
 };
 
 /************************* REPORTS ********************************/
+// Calculate the highest earning category out of all the operations entered
+const calculateHighestEarningCategory = () => {
+  // initiliaze object to store final result
+  let highestEarningCategory = { name: "", amount: 0 };
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    let { operationCategory, operationAmount, operationType } = operation;
+    console.log(operationCategory, operationAmount, operationType);
+    let categoryName = operationCategory || "Uncategorized";
+
+    if (
+      operationType === "Ganancia" &&
+      operationAmount > highestEarningCategory.amount
+    ) {
+      // if true, update highestEarningCategory with the current category name and amount
+      highestEarningCategory = {
+        name: categoryName,
+        amount: parseFloat(operationAmount),
+      };
+    }
+  }
+  return highestEarningCategory;
+};
+
+// Render the highest earning category
+const renderHighestEarningCategory = () => {
+  const highestEarningCategory = calculateHighestEarningCategory();
+  console.log("Highest Earning Category:", highestEarningCategory);
+
+  $("#categoria-mayor-ganancia").innerHTML = `
+    <div class="flex items-center p-1">
+      <div class="w-2/3">
+        <span class="text-xs text-orange-400 bg-orange-100 px-2 py-1 rounded-md whitespace-nowrap overflow-hidden">
+          ${highestEarningCategory.name}
+        </span>
+      </div>
+      <div class="w-1/3 flex items-end justify-end">
+        <span class="whitespace-nowrap overflow-hidden text-green-600">
+          $${highestEarningCategory.amount}
+        </span>
+      </div>
+    </div>
+  `;
+};
+
 // Render reports
 const renderReportsSection = () => {
   if (
     loadedOperationsFromLocalStorage &&
     loadedOperationsFromLocalStorage.length > 0
   ) {
+    // operations exist, so now render the reports
+    renderHighestEarningCategory();
+
     // show the reports section
     showElement(["#reports-section"]);
     hideElement(["#no-reports-section"]);
