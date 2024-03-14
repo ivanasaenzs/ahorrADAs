@@ -531,6 +531,107 @@ const renderHighestEarningCategory = () => {
   `;
 };
 
+// Calculate the category with the highest expense
+const calculateHighestExpenseCategory = () => {
+  let highestExpenseCategory = { name: "", amount: 0 };
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    let { operationCategory, operationAmount, operationType } = operation;
+    let categoryName = operationCategory || "Uncategorized";
+
+    if (
+      operationType === "Gasto" &&
+      operationAmount > highestExpenseCategory.amount
+    ) {
+      highestExpenseCategory = {
+        name: categoryName,
+        amount: parseFloat(operationAmount),
+      };
+    }
+    // console.log(categoryName);
+    // console.log(operationCategory, operationAmount, operationType);
+  }
+  return highestExpenseCategory;
+};
+
+// Render the highest expense category
+const renderHighestExpenseCategory = () => {
+  const highestExpenseCategory = calculateHighestExpenseCategory();
+  console.log("Highest Expense Category:", highestExpenseCategory);
+
+  $("#categoria-mayor-gasto").innerHTML = `
+  <div class="flex items-center justify-between">
+        <div class="w-2/3">
+          <span class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden">
+    ${highestExpenseCategory.name}
+          </span>
+        </div>
+        <div class="w-1/3 flex items-end justify-end">
+          <span class="whitespace-nowrap overflow-hidden text-red-600">
+            $${highestExpenseCategory.amount}
+          </span>
+        </div>
+      </div>
+  `;
+};
+
+// Calculate the category with the highest balance
+const calculateHighestBalanceCategory = () => {
+  let categoryBalances = {};
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    let { operationCategory, operationAmount, operationType } = operation;
+    let categoryName = operationCategory || "Uncategorized";
+
+    if (!categoryBalances[categoryName]) {
+      categoryBalances[categoryName] = 0;
+    }
+
+    if (operationType === "Gasto") {
+      categoryBalances[categoryName] -= parseFloat(operationAmount);
+    } else if (operationType === "Ganancia") {
+      categoryBalances[categoryName] += parseFloat(operationAmount);
+    }
+  }
+
+  let highestBalanceCategoryName = "";
+  let highestBalance = 0;
+
+  for (const categoryName in categoryBalances) {
+    const balance = Math.abs(categoryBalances[categoryName]);
+
+    if (balance > highestBalance) {
+      highestBalance = balance;
+      highestBalanceCategoryName = categoryName;
+    }
+  }
+  return {
+    name: highestBalanceCategoryName,
+    balance: categoryBalances[highestBalanceCategoryName],
+  };
+};
+
+// Render category
+const renderHighestBalanceCategory = () => {
+  const highestBalanceCategory = calculateHighestBalanceCategory();
+  console.log("Category with the Highest Balance:", highestBalanceCategory);
+
+  $("#categoria-mayor-balance").innerHTML = `
+  <div class="flex items-center justify-between">
+        <div class="w-2/3">
+          <span class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden">
+    ${highestBalanceCategory.name}
+          </span>
+        </div>
+        <div class="w-1/3 flex items-end justify-end">
+          <span class="whitespace-nowrap overflow-hidden text-red-600">
+            $${highestBalanceCategory.balance}
+          </span>
+        </div>
+      </div>
+  `;
+};
+
 // Render reports
 const renderReportsSection = () => {
   if (
@@ -539,6 +640,8 @@ const renderReportsSection = () => {
   ) {
     // operations exist, so now render the reports
     renderHighestEarningCategory();
+    renderHighestExpenseCategory();
+    renderHighestBalanceCategory();
 
     // show the reports section
     showElement(["#reports-section"]);
