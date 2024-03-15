@@ -632,6 +632,122 @@ const renderHighestBalanceCategory = () => {
   `;
 };
 
+// Calculate the month with the highest earnings
+const calculateHighestEarningMonth = () => {
+  const monthlyEarnings = {};
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const { operationDate, operationType, operationAmount } = operation;
+    // to cut the day out of the date format
+    const month = operationDate.slice(0, 7);
+    console.log(
+      `This is the full date: ${operationDate} /// This is the "sliced" date with only the year and month: ${month}`
+    );
+
+    if (operationType === "Ganancia") {
+      // if the month key in my monthlyEarnings object doesn't exist, i initialize it to 0 so i can then add the result of every iteration
+      if (!monthlyEarnings[month]) {
+        monthlyEarnings[month] = 0;
+      }
+      monthlyEarnings[month] += parseFloat(operationAmount);
+      // console.log(monthlyEarnings[month]);
+    }
+  }
+
+  // initialize the object with the results
+  let highestEarningMonth = { month: "", earning: 0 };
+
+  for (const month in monthlyEarnings) {
+    if (monthlyEarnings.hasOwnProperty(month)) {
+      const earnings = monthlyEarnings[month];
+      // if the earnings for the current month (earnings) are greater than the earnings of the current highestEarningMonth object, we update it with the latest month and earnings
+      if (earnings > highestEarningMonth.earning) {
+        highestEarningMonth = { month, earnings };
+        console.log("These are the highest earnings: ", `$${earnings}`);
+      }
+    }
+  }
+  return highestEarningMonth;
+};
+
+// Render
+const renderHighestEarningMonth = () => {
+  const highestEarningMonth = calculateHighestEarningMonth();
+  console.log("Month with the highest earning: ", highestEarningMonth);
+
+  // reverse the original date so we get MONTH-YEAR instead of YEAR-MONTH
+  const originalMonth = highestEarningMonth.month;
+  const splitMonth = originalMonth.split("-");
+  const reversedMonth = `${splitMonth[1]}/${splitMonth[0]}`;
+
+  $("#mes-mayor-ganancia").innerHTML = `
+  <div class="flex items-center justify-between">
+        <div class="w-2/3">
+          <span class="whitespace-nowrap overflow-hidden">${reversedMonth}</span>
+        </div>
+        <div class="w-1/3 flex items-end justify-end">
+          <span class="whitespace-nowrap overflow-hidden text-green-600">
+           $${highestEarningMonth.earnings}
+          </span>
+        </div>
+      </div> 
+  `;
+};
+
+// Calculate the month with the highest expense
+const calculateHighestExpenseMonth = () => {
+  const monthlyExpenses = {};
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const { operationDate, operationType, operationAmount } = operation;
+    const month = operationDate.slice(0, 7);
+
+    if (operationType === "Gasto") {
+      if (!monthlyExpenses[month]) {
+        monthlyExpenses[month] = 0;
+      }
+
+      monthlyExpenses[month] += parseFloat(operationAmount);
+      // console.log(monthlyExpenses[month]);
+    }
+  }
+
+  let highestExpenseMonth = { month: "", expense: 0 };
+
+  for (const month in monthlyExpenses) {
+    if (monthlyExpenses.hasOwnProperty(month)) {
+      const expense = monthlyExpenses[month];
+      if (highestExpenseMonth.expense < expense) {
+        highestExpenseMonth = { month, expense };
+      }
+    }
+  }
+  return highestExpenseMonth;
+};
+
+// Render the month with the highest expense
+const renderHighestExpenseMonth = () => {
+  const highestExpenseMonth = calculateHighestExpenseMonth();
+  console.log("Month with the highest expense", highestExpenseMonth);
+
+  const originalMonth = highestExpenseMonth.month;
+  const splitMonth = originalMonth.split("-");
+  const reversedMonth = `${splitMonth[1]}/${splitMonth[0]}`;
+
+  $("#mes-mayor-gasto").innerHTML = `
+ <div class="flex items-center justify-between">
+        <div class="w-2/3">
+          <span class="whitespace-nowrap overflow-hidden">${reversedMonth}</span>
+        </div>
+        <div class="w-1/3 flex items-end justify-end">
+          <span class="whitespace-nowrap overflow-hidden text-red-600">
+         $${highestExpenseMonth.expense}
+          </span>
+        </div>
+      </div>
+  `;
+};
+
 // Render reports
 const renderReportsSection = () => {
   if (
@@ -642,6 +758,8 @@ const renderReportsSection = () => {
     renderHighestEarningCategory();
     renderHighestExpenseCategory();
     renderHighestBalanceCategory();
+    renderHighestEarningMonth();
+    renderHighestExpenseMonth();
 
     // show the reports section
     showElement(["#reports-section"]);
