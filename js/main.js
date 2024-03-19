@@ -748,6 +748,122 @@ const renderHighestExpenseMonth = () => {
   `;
 };
 
+// Calculate the balance for each category
+const calculateCategoryTotals = () => {
+  const categoryTotals = {};
+
+  for (const operation of loadedOperationsFromLocalStorage) {
+    const { operationCategory, operationAmount, operationType } = operation;
+    const categoryName = operationCategory || "Uncategorized";
+
+    // if categoryName doesn't exist, it is initialized with the keys we need
+    if (!categoryTotals[categoryName]) {
+      categoryTotals[categoryName] = { income: 0, expense: 0, balance: 0 };
+    }
+
+    // update income and expense values with each loop
+    if (operationType === "Ganancia") {
+      categoryTotals[categoryName].income += parseFloat(operationAmount);
+    } else if (operationType === "Gasto") {
+      categoryTotals[categoryName].expense += parseFloat(operationAmount);
+    }
+
+    // update balance for the category
+    categoryTotals[categoryName].balance =
+      categoryTotals[categoryName].income -
+      categoryTotals[categoryName].expense;
+  }
+  return categoryTotals;
+};
+
+// Render the total category balance
+const renderCategoryTotals = () => {
+  const totalsByCategory = calculateCategoryTotals();
+  console.log("The totals by category are: ", totalsByCategory);
+
+  // loop through each category
+  for (const categoryName in totalsByCategory) {
+    const totals = totalsByCategory[categoryName];
+    console.log(totals);
+    const { income, expense, balance } = totals;
+
+    $("#totales-por-categoria").innerHTML += `
+          <span class="text-xs text-orange-400 bg-orange-100 px-2 py-1 rounded-md whitespace-nowrap overflow-hidden">
+            ${categoryName}
+          </span>
+     `;
+    $("#totales-categoria-ganancias").innerHTML += `
+        <span>$${income}</span>
+        `;
+    $("#totales-categoria-gastos").innerHTML += `<span>$${expense}</span>`;
+    $("#totales-categoria-balance").innerHTML += ` <span>$${balance}</span>`;
+  }
+};
+
+// Calculate the total balance for each month
+const calculateMonthTotals = () => {
+  const operations = getInfo("operations") || [];
+  const monthTotals = {};
+
+  for (const operation of operations) {
+    const { operationDate, operationAmount, operationType } = operation;
+    const monthYear = operationDate.slice(0, 7);
+
+    if (!monthTotals[monthYear]) {
+      monthTotals[monthYear] = { income: 0, expense: 0, balance: 0 };
+    }
+
+    // update values
+    if (operationType === "Ganancia") {
+      monthTotals[monthYear].income += parseFloat(operationAmount);
+    } else if (operationType === "Gasto") {
+      monthTotals[monthYear].expense += parseFloat(operationAmount);
+    }
+
+    // update the balance
+    monthTotals[monthYear].balance =
+      monthTotals[monthYear].income - monthTotals[monthYear].expense;
+  }
+  return monthTotals;
+};
+
+const renderMonthTotals = () => {
+  const totalsByMonth = calculateMonthTotals();
+  console.log("The totals by month are: ", totalsByMonth);
+
+  // loop through each month
+  for (const monthYear in totalsByMonth) {
+    // check if object actually has the property
+    if (totalsByMonth.hasOwnProperty(monthYear)) {
+      const totals = totalsByMonth[monthYear];
+      const { income, expense, balance } = totals;
+
+      // "manually" modify the date format
+      const splitDate = monthYear.split("-");
+      const reversedDate = `${splitDate[1]}/${splitDate[0]}`;
+
+      // render the totals for each month and year
+      $("#totales-mes").innerHTML += `
+      <div class="w-1/4">
+          <h4 class="font-semibold">${reversedDate}</h4>
+          </div>
+        `;
+
+      $("#totales-mes-ganancias").innerHTML += `
+          <span>$${income}</span>
+      `;
+
+      $("#totales-mes-gastos").innerHTML += `
+        <span>$${expense}</span>
+       `;
+
+      $("#totales-mes-balance").innerHTML += `
+          <span>$${balance}</span>
+        `;
+    }
+  }
+};
+
 // Render reports
 const renderReportsSection = () => {
   if (
@@ -760,6 +876,8 @@ const renderReportsSection = () => {
     renderHighestBalanceCategory();
     renderHighestEarningMonth();
     renderHighestExpenseMonth();
+    renderCategoryTotals();
+    renderMonthTotals();
 
     // show the reports section
     showElement(["#reports-section"]);
