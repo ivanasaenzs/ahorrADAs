@@ -16,7 +16,7 @@ AhorrADAs es un proyecto con el objetivo de ofrecer una herramienta intuitiva y 
 
 - **JavaScript:** La lógica de la aplicación se implementa utilizando JavaScript, permitiendo una interactividad dinámica y una experiencia de usuario fluida.
 
-## Colaborada
+##
 
 Este proyecto es resultado del esfuerzo de:
 
