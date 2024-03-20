@@ -515,7 +515,7 @@ const renderHighestEarningCategory = () => {
   const highestEarningCategory = calculateHighestEarningCategory();
   console.log("Highest Earning Category:", highestEarningCategory);
 
-  $("#categoria-mayor-ganancia").innerHTML = `
+  $("#highest-earning-category").innerHTML = `
     <div class="flex items-center p-1">
       <div class="w-2/3">
         <span class="text-xs text-orange-400 bg-orange-100 px-2 py-1 rounded-md whitespace-nowrap overflow-hidden">
@@ -559,7 +559,7 @@ const renderHighestExpenseCategory = () => {
   const highestExpenseCategory = calculateHighestExpenseCategory();
   console.log("Highest Expense Category:", highestExpenseCategory);
 
-  $("#categoria-mayor-gasto").innerHTML = `
+  $("#highest-expense-category").innerHTML = `
   <div class="flex items-center justify-between">
         <div class="w-2/3">
           <span class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden">
@@ -616,7 +616,7 @@ const renderHighestBalanceCategory = () => {
   const highestBalanceCategory = calculateHighestBalanceCategory();
   console.log("Category with the Highest Balance:", highestBalanceCategory);
 
-  $("#categoria-mayor-balance").innerHTML = `
+  $("#highest-balance-category").innerHTML = `
   <div class="flex items-center justify-between">
         <div class="w-2/3">
           <span class="px-2 py-1 text-xs text-orange-400 bg-orange-100 rounded-md whitespace-nowrap overflow-hidden">
@@ -680,7 +680,7 @@ const renderHighestEarningMonth = () => {
   const splitMonth = originalMonth.split("-");
   const reversedMonth = `${splitMonth[1]}/${splitMonth[0]}`;
 
-  $("#mes-mayor-ganancia").innerHTML = `
+  $("#highest-earning-month").innerHTML = `
   <div class="flex items-center justify-between">
         <div class="w-2/3">
           <span class="whitespace-nowrap overflow-hidden">${reversedMonth}</span>
@@ -734,7 +734,7 @@ const renderHighestExpenseMonth = () => {
   const splitMonth = originalMonth.split("-");
   const reversedMonth = `${splitMonth[1]}/${splitMonth[0]}`;
 
-  $("#mes-mayor-gasto").innerHTML = `
+  $("#highest-expense-month").innerHTML = `
  <div class="flex items-center justify-between">
         <div class="w-2/3">
           <span class="whitespace-nowrap overflow-hidden">${reversedMonth}</span>
@@ -787,16 +787,16 @@ const renderCategoryTotals = () => {
     console.log(totals);
     const { income, expense, balance } = totals;
 
-    $("#totales-por-categoria").innerHTML += `
+    $("#category-totals").innerHTML += `
           <span class="text-xs text-orange-400 bg-orange-100 px-2 py-1 rounded-md whitespace-nowrap overflow-hidden">
             ${categoryName}
           </span>
      `;
-    $("#totales-categoria-ganancias").innerHTML += `
+    $("#category-totals-earnings").innerHTML += `
         <span>$${income}</span>
         `;
-    $("#totales-categoria-gastos").innerHTML += `<span>$${expense}</span>`;
-    $("#totales-categoria-balance").innerHTML += ` <span>$${balance}</span>`;
+    $("#category-totals-expenses").innerHTML += `<span>$${expense}</span>`;
+    $("#category-total-balance").innerHTML += ` <span>$${balance}</span>`;
   }
 };
 
@@ -843,21 +843,21 @@ const renderMonthTotals = () => {
       const reversedDate = `${splitDate[1]}/${splitDate[0]}`;
 
       // render the totals for each month and year
-      $("#totales-mes").innerHTML += `
+      $("#month-totals").innerHTML += `
       <div class="w-1/4">
           <h4 class="font-semibold">${reversedDate}</h4>
           </div>
         `;
 
-      $("#totales-mes-ganancias").innerHTML += `
+      $("#month-total-earnings").innerHTML += `
           <span>$${income}</span>
       `;
 
-      $("#totales-mes-gastos").innerHTML += `
+      $("#month-total-expenses").innerHTML += `
         <span>$${expense}</span>
        `;
 
-      $("#totales-mes-balance").innerHTML += `
+      $("#month-total-balance").innerHTML += `
           <span>$${balance}</span>
         `;
     }
@@ -932,8 +932,8 @@ const initialize = () => {
 
   $("#reports-nav").addEventListener("click", () => {
     console.log("Reports nav clicked");
-    showElement(["#reports-section"]);
-    hideElement(["#balance-section", "#categories-section"]);
+    hideElement(["#balance-section"]);
+    renderReportsSection(loadedOperationsFromLocalStorage);
   });
 
   $("#add-operation-btn").addEventListener("click", () => {
@@ -999,9 +999,6 @@ const initialize = () => {
     showElement([".bars"]);
     hideElement([".xmark", "#menu-dropdown"]);
   });
-
-  // Render reports section
-  renderReportsSection(loadedOperationsFromLocalStorage);
 };
 
 window.addEventListener("load", initialize);
