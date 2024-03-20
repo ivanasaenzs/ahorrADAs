@@ -932,8 +932,8 @@ const initialize = () => {
 
   $("#reports-nav").addEventListener("click", () => {
     console.log("Reports nav clicked");
-    showElement(["#reports-section"]);
-    hideElement(["#balance-section", "#categories-section"]);
+    hideElement(["#balance-section"]);
+    renderReportsSection(loadedOperationsFromLocalStorage);
   });
 
   $("#add-operation-btn").addEventListener("click", () => {
@@ -999,9 +999,6 @@ const initialize = () => {
     showElement([".bars"]);
     hideElement([".xmark", "#menu-dropdown"]);
   });
-
-  // Render reports section
-  renderReportsSection(loadedOperationsFromLocalStorage);
 };
 
 window.addEventListener("load", initialize);
