@@ -106,7 +106,6 @@ const deleteCategory = (categoryId) => {
 
 // Render categories
 const renderCategories = (categories) => {
-  console.log("Rendering Categories with data:", categories);
   cleanContainer("#category-list");
   for (const category of categories) {
     $(
@@ -183,10 +182,6 @@ const renderBalanceOverview = () => {
 
   const totalBalance = totalEarnings - totalExpenses;
 
-  console.log("Total earnings are: ", `+$${totalEarnings}`);
-  console.log("Total expenses are: ", `-$${totalExpenses}`);
-  console.log("The total balance is: ", `$${totalBalance}`);
-
   $(
     "#balance-overview"
   ).innerHTML = `<div class="md:p-5 w-full flex flex-row justify-start">
@@ -240,7 +235,6 @@ const deleteOperation = (operationId) => {
   loadedOperationsFromLocalStorage = updatedOperations;
   renderOperations(updatedOperations);
   renderBalanceOverview();
-  console.log("Operations after deleting:", loadedOperationsFromLocalStorage);
 
   if (updatedOperations.length === 0) {
     hideElement(["#with-operations"]);
@@ -255,7 +249,6 @@ const addOperation = () => {
   const operationAmount = $("#new-operation-amount-input").value;
   const operationCategory = $("#newop-category-select").value;
   const operationDate = $("#new-operation-date-input").value;
-  console.log(operationDate);
 
   if (
     operationName !== "" &&
@@ -282,21 +275,12 @@ const addOperation = () => {
 
 // Edit operation
 const editOperation = () => {
-  console.log("Edit operation button clicked");
-
   const operationId = $("#edit-operation-name-input").dataset.id;
   const updatedName = $("#edit-operation-name-input").value;
   const updatedAmount = $("#edit-operation-amount-input").value;
   const updatedCategory = $("#edit-operation-select").value;
   const updatedDate = $("#edit-operation-date-input").value;
   const updatedType = $("#edit-operation-type-select").value;
-
-  console.log("Operation ID:", operationId);
-  console.log("Updated Name:", updatedName);
-  console.log("Updated Amount:", updatedAmount);
-  console.log("Updated category:", updatedCategory);
-  console.log("Updated DATE:", updatedDate);
-  console.log("Updated Operation Type:", updatedType);
 
   if (
     operationId ||
@@ -330,7 +314,6 @@ const editOperation = () => {
 
 // Render operations table
 const renderOperations = (operations) => {
-  console.log("Rendering Operations with data:", operations);
   cleanContainer("#operations-table");
   for (const operation of operations) {
     /* Add red or green - Plus or minus symbols depending on the type of operation */
@@ -388,11 +371,9 @@ const renderOperations = (operations) => {
 // Filter by operation type: Earning - Expense
 const filterOperationType = () => {
   const operationTypeSelected = $("#filters-type-input").value;
-  console.log(operationTypeSelected);
 
   for (const operation of loadedOperationsFromLocalStorage) {
     const operationElement = $(`#operation-${operation.id}`);
-    console.log(operationElement);
 
     if (operationElement) {
       if (
@@ -415,12 +396,9 @@ const filterOperationType = () => {
 // Filter operation category: depending on the category selected
 const filterOperationCategory = () => {
   const operationCategorySelected = $("#select-form").value;
-  console.log(operationCategorySelected);
 
   for (const operation of loadedOperationsFromLocalStorage) {
     const categoryElement = $(`#operation-${operation.id}`);
-    console.log(categoryElement);
-    console.log(operation.operationCategory);
 
     // only enters the conditional if the element exists
     if (categoryElement) {
@@ -439,13 +417,10 @@ const filterOperationCategory = () => {
 // Filter operation date: from the selected date onward
 const filterOperationDate = () => {
   const operationDateSelected = new Date($("#filter-date-input").value);
-  console.log(operationDateSelected);
 
   for (const operation of loadedOperationsFromLocalStorage) {
     const operationElement = $(`#operation-${operation.id}`);
-    console.log(operationElement);
     const operationDate = new Date(operation.operationDate);
-    console.log(operationDate);
 
     if (operationDate >= operationDateSelected) {
       operationElement.style.display = "flex";
@@ -493,7 +468,6 @@ const calculateHighestEarningCategory = () => {
 
   for (const operation of loadedOperationsFromLocalStorage) {
     let { operationCategory, operationAmount, operationType } = operation;
-    console.log(operationCategory, operationAmount, operationType);
     let categoryName = operationCategory || "Uncategorized";
 
     if (
@@ -513,7 +487,6 @@ const calculateHighestEarningCategory = () => {
 // Render the highest earning category
 const renderHighestEarningCategory = () => {
   const highestEarningCategory = calculateHighestEarningCategory();
-  console.log("Highest Earning Category:", highestEarningCategory);
 
   $("#highest-earning-category").innerHTML = `
     <div class="flex items-center p-1">
@@ -548,8 +521,6 @@ const calculateHighestExpenseCategory = () => {
         amount: parseFloat(operationAmount),
       };
     }
-    // console.log(categoryName);
-    // console.log(operationCategory, operationAmount, operationType);
   }
   return highestExpenseCategory;
 };
@@ -557,7 +528,6 @@ const calculateHighestExpenseCategory = () => {
 // Render the highest expense category
 const renderHighestExpenseCategory = () => {
   const highestExpenseCategory = calculateHighestExpenseCategory();
-  console.log("Highest Expense Category:", highestExpenseCategory);
 
   $("#highest-expense-category").innerHTML = `
   <div class="flex items-center justify-between">
@@ -614,7 +584,6 @@ const calculateHighestBalanceCategory = () => {
 // Render category
 const renderHighestBalanceCategory = () => {
   const highestBalanceCategory = calculateHighestBalanceCategory();
-  console.log("Category with the Highest Balance:", highestBalanceCategory);
 
   $("#highest-balance-category").innerHTML = `
   <div class="flex items-center justify-between">
@@ -640,9 +609,6 @@ const calculateHighestEarningMonth = () => {
     const { operationDate, operationType, operationAmount } = operation;
     // to cut the day out of the date format
     const month = operationDate.slice(0, 7);
-    console.log(
-      `This is the full date: ${operationDate} /// This is the "sliced" date with only the year and month: ${month}`
-    );
 
     if (operationType === "Ganancia") {
       // if the month key in my monthlyEarnings object doesn't exist, i initialize it to 0 so i can then add the result of every iteration
@@ -650,7 +616,6 @@ const calculateHighestEarningMonth = () => {
         monthlyEarnings[month] = 0;
       }
       monthlyEarnings[month] += parseFloat(operationAmount);
-      // console.log(monthlyEarnings[month]);
     }
   }
 
@@ -663,7 +628,6 @@ const calculateHighestEarningMonth = () => {
       // if the earnings for the current month (earnings) are greater than the earnings of the current highestEarningMonth object, we update it with the latest month and earnings
       if (earnings > highestEarningMonth.earning) {
         highestEarningMonth = { month, earnings };
-        console.log("These are the highest earnings: ", `$${earnings}`);
       }
     }
   }
@@ -673,7 +637,6 @@ const calculateHighestEarningMonth = () => {
 // Render
 const renderHighestEarningMonth = () => {
   const highestEarningMonth = calculateHighestEarningMonth();
-  console.log("Month with the highest earning: ", highestEarningMonth);
 
   // reverse the original date so we get MONTH-YEAR instead of YEAR-MONTH
   const originalMonth = highestEarningMonth.month;
@@ -708,7 +671,6 @@ const calculateHighestExpenseMonth = () => {
       }
 
       monthlyExpenses[month] += parseFloat(operationAmount);
-      // console.log(monthlyExpenses[month]);
     }
   }
 
@@ -728,7 +690,6 @@ const calculateHighestExpenseMonth = () => {
 // Render the month with the highest expense
 const renderHighestExpenseMonth = () => {
   const highestExpenseMonth = calculateHighestExpenseMonth();
-  console.log("Month with the highest expense", highestExpenseMonth);
 
   const originalMonth = highestExpenseMonth.month;
   const splitMonth = originalMonth.split("-");
@@ -779,12 +740,10 @@ const calculateCategoryTotals = () => {
 // Render the total category balance
 const renderCategoryTotals = () => {
   const totalsByCategory = calculateCategoryTotals();
-  console.log("The totals by category are: ", totalsByCategory);
 
   // loop through each category
   for (const categoryName in totalsByCategory) {
     const totals = totalsByCategory[categoryName];
-    console.log(totals);
     const { income, expense, balance } = totals;
 
     $("#category-totals").innerHTML += `
@@ -829,7 +788,6 @@ const calculateMonthTotals = () => {
 
 const renderMonthTotals = () => {
   const totalsByMonth = calculateMonthTotals();
-  console.log("The totals by month are: ", totalsByMonth);
 
   // loop through each month
   for (const monthYear in totalsByMonth) {
@@ -905,64 +863,53 @@ const initialize = () => {
   renderCategories(loadedCategoriesFromLocalStorage);
   renderOperations(loadedOperationsFromLocalStorage);
   renderBalanceOverview();
-  console.log("Operations after adding:", loadedOperationsFromLocalStorage);
 
   /* Check if there are operations loaded, if not, render the "No operations" section */
   const operationsLoaded = getInfo("operations");
   if (operationsLoaded && operationsLoaded.length > 0) {
-    console.log("Operation(s) available!!");
     showElement(["#with-operations"]);
   } else {
-    console.log("No operations found");
     hideElement(["#with-operations"]);
     showElement(["#no-operations"]);
   }
 
   $("#balance-nav").addEventListener("click", () => {
-    console.log("Balance nav clicked");
     showElement(["#balance-section"]);
     hideElement(["#categories-section", "#reports-section"]);
   });
 
   $("#categories-nav").addEventListener("click", () => {
-    console.log("Categories nav clicked");
     showElement(["#categories-section"]);
     hideElement(["#balance-section", "#reports-section"]);
   });
 
   $("#reports-nav").addEventListener("click", () => {
-    console.log("Reports nav clicked");
     hideElement(["#balance-section"]);
     renderReportsSection(loadedOperationsFromLocalStorage);
   });
 
   $("#add-operation-btn").addEventListener("click", () => {
-    console.log("Add new operation (FORM) button clicked");
     showElement(["#new-operation-section"]);
     hideElement(["#balance-section"]);
   });
 
   $("#add-newoperation-btn").addEventListener("click", () => {
-    console.log("Add new operation (CONFIRMATION) button clicked");
     addOperation();
     hideElement(["#new-operation-section", "#no-operations"]);
     showElement(["#balance-section", "#with-operations"]);
   });
 
   $("#cancel-newoperation-btn").addEventListener("click", () => {
-    console.log("Cancel new operation button clicked");
     hideElement(["#new-operation-section"]);
     showElement(["#balance-section"]);
   });
 
   $("#confirm-edit-operation-btn").addEventListener("click", () => {
-    console.log("Edit operation button clicked");
     hideElement(["#edit-operation-section"]);
     showElement(["#balance-section"]);
   });
 
   $("#cancel-editoperation-btn").addEventListener("click", () => {
-    console.log("CANCEL edit operation button clicked");
     hideElement(["#edit-operation-section"]);
     showElement(["#balance-section"]);
   });
