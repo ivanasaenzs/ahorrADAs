@@ -875,16 +875,24 @@ const initialize = () => {
 
   $("#balance-nav").addEventListener("click", () => {
     showElement(["#balance-section"]);
-    hideElement(["#categories-section", "#reports-section"]);
+    hideElement([
+      "#categories-section",
+      "#no-reports-section",
+      "#reports-section",
+    ]);
   });
 
   $("#categories-nav").addEventListener("click", () => {
     showElement(["#categories-section"]);
-    hideElement(["#balance-section", "#reports-section"]);
+    hideElement([
+      "#balance-section",
+      "#no-reports-section",
+      "#reports-section",
+    ]);
   });
 
   $("#reports-nav").addEventListener("click", () => {
-    hideElement(["#balance-section"]);
+    hideElement(["#balance-section", "#categories-section"]);
     renderReportsSection(loadedOperationsFromLocalStorage);
   });
 
@@ -895,6 +903,7 @@ const initialize = () => {
 
   $("#add-newoperation-btn").addEventListener("click", () => {
     addOperation();
+    cleanContainer;
     hideElement(["#new-operation-section", "#no-operations"]);
     showElement(["#balance-section", "#with-operations"]);
   });
