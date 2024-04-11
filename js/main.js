@@ -4,7 +4,6 @@ const $ = (selector) => document.querySelector(selector);
 const showElement = (selectors) => {
   for (const selector of selectors) {
     const element = $(selector);
-    // first check if it exists THEN remove class
     if (element) {
       $(selector).classList.remove("hidden");
     }
@@ -14,7 +13,6 @@ const showElement = (selectors) => {
 const hideElement = (selectors) => {
   for (const selector of selectors) {
     const element = $(selector);
-    // first check if it exists THEN add class
     if (element) {
       element.classList.add("hidden");
     }
@@ -316,7 +314,6 @@ const editOperation = () => {
 const renderOperations = (operations) => {
   cleanContainer("#operations-table");
   for (const operation of operations) {
-    /* Add red or green - Plus or minus symbols depending on the type of operation */
     let amountClass = "";
     let negativeOrPositiveAmount = "";
 
@@ -400,14 +397,12 @@ const filterOperationCategory = () => {
   for (const operation of loadedOperationsFromLocalStorage) {
     const categoryElement = $(`#operation-${operation.id}`);
 
-    // only enters the conditional if the element exists
     if (categoryElement) {
       if (operationCategorySelected === "Todas") {
         categoryElement.style.display = "flex";
       } else if (operationCategorySelected === operation.operationCategory) {
         categoryElement.style.display = "flex";
       } else if (operationCategorySelected !== operation.operationCategory) {
-        // hides all the ops ?? should render no operations section
         categoryElement.style.display = "none";
       }
     }
@@ -444,7 +439,6 @@ const sortingFunctions = {
 
 // Function that does the actual sortering
 const sortingFunction = (operations, sortCondition) => {
-  // I make a copy of the original array so the sort() method doesn't modify it
   const sortedOperations = [...operations];
   return sortedOperations.sort(sortingFunctions[sortCondition]);
 };
@@ -463,7 +457,6 @@ const sortByOperations = () => {
 /************************* REPORTS ********************************/
 // Calculate the highest earning category out of all the operations entered
 const calculateHighestEarningCategory = () => {
-  // initiliaze object to store final result
   let highestEarningCategory = { name: "", amount: 0 };
 
   for (const operation of loadedOperationsFromLocalStorage) {
@@ -474,7 +467,6 @@ const calculateHighestEarningCategory = () => {
       operationType === "Ganancia" &&
       operationAmount > highestEarningCategory.amount
     ) {
-      // if true, update highestEarningCategory with the current category name and amount
       highestEarningCategory = {
         name: categoryName,
         amount: parseFloat(operationAmount),
@@ -607,11 +599,9 @@ const calculateHighestEarningMonth = () => {
 
   for (const operation of loadedOperationsFromLocalStorage) {
     const { operationDate, operationType, operationAmount } = operation;
-    // to cut the day out of the date format
     const month = operationDate.slice(0, 7);
 
     if (operationType === "Ganancia") {
-      // if the month key in my monthlyEarnings object doesn't exist, i initialize it to 0 so i can then add the result of every iteration
       if (!monthlyEarnings[month]) {
         monthlyEarnings[month] = 0;
       }
@@ -619,13 +609,11 @@ const calculateHighestEarningMonth = () => {
     }
   }
 
-  // initialize the object with the results
   let highestEarningMonth = { month: "", earning: 0 };
 
   for (const month in monthlyEarnings) {
     if (monthlyEarnings.hasOwnProperty(month)) {
       const earnings = monthlyEarnings[month];
-      // if the earnings for the current month (earnings) are greater than the earnings of the current highestEarningMonth object, we update it with the latest month and earnings
       if (earnings > highestEarningMonth.earning) {
         highestEarningMonth = { month, earnings };
       }
@@ -638,7 +626,6 @@ const calculateHighestEarningMonth = () => {
 const renderHighestEarningMonth = () => {
   const highestEarningMonth = calculateHighestEarningMonth();
 
-  // reverse the original date so we get MONTH-YEAR instead of YEAR-MONTH
   const originalMonth = highestEarningMonth.month;
   const splitMonth = originalMonth.split("-");
   const reversedMonth = `${splitMonth[1]}/${splitMonth[0]}`;
@@ -717,19 +704,16 @@ const calculateCategoryTotals = () => {
     const { operationCategory, operationAmount, operationType } = operation;
     const categoryName = operationCategory || "Uncategorized";
 
-    // if categoryName doesn't exist, it is initialized with the keys we need
     if (!categoryTotals[categoryName]) {
       categoryTotals[categoryName] = { income: 0, expense: 0, balance: 0 };
     }
 
-    // update income and expense values with each loop
     if (operationType === "Ganancia") {
       categoryTotals[categoryName].income += parseFloat(operationAmount);
     } else if (operationType === "Gasto") {
       categoryTotals[categoryName].expense += parseFloat(operationAmount);
     }
 
-    // update balance for the category
     categoryTotals[categoryName].balance =
       categoryTotals[categoryName].income -
       categoryTotals[categoryName].expense;
@@ -741,7 +725,6 @@ const calculateCategoryTotals = () => {
 const renderCategoryTotals = () => {
   const totalsByCategory = calculateCategoryTotals();
 
-  // loop through each category
   for (const categoryName in totalsByCategory) {
     const totals = totalsByCategory[categoryName];
     const { income, expense, balance } = totals;
@@ -772,14 +755,12 @@ const calculateMonthTotals = () => {
       monthTotals[monthYear] = { income: 0, expense: 0, balance: 0 };
     }
 
-    // update values
     if (operationType === "Ganancia") {
       monthTotals[monthYear].income += parseFloat(operationAmount);
     } else if (operationType === "Gasto") {
       monthTotals[monthYear].expense += parseFloat(operationAmount);
     }
 
-    // update the balance
     monthTotals[monthYear].balance =
       monthTotals[monthYear].income - monthTotals[monthYear].expense;
   }
@@ -789,18 +770,14 @@ const calculateMonthTotals = () => {
 const renderMonthTotals = () => {
   const totalsByMonth = calculateMonthTotals();
 
-  // loop through each month
   for (const monthYear in totalsByMonth) {
-    // check if object actually has the property
     if (totalsByMonth.hasOwnProperty(monthYear)) {
       const totals = totalsByMonth[monthYear];
       const { income, expense, balance } = totals;
 
-      // "manually" modify the date format
       const splitDate = monthYear.split("-");
       const reversedDate = `${splitDate[1]}/${splitDate[0]}`;
 
-      // render the totals for each month and year
       $("#month-totals").innerHTML += `
       <div class="w-1/4">
           <h4 class="font-semibold">${reversedDate}</h4>
@@ -837,11 +814,9 @@ const renderReportsSection = () => {
     renderCategoryTotals();
     renderMonthTotals();
 
-    // show the reports section
     showElement(["#reports-section"]);
     hideElement(["#no-reports-section"]);
   } else {
-    // no operations exist, hide the reports section and show the no reports message
     hideElement(["#reports-section"]);
     showElement(["#no-reports-section"]);
   }
@@ -849,7 +824,6 @@ const renderReportsSection = () => {
 
 /************************* INITIALIZE APP *************************/
 const initialize = () => {
-  // sets my object of hardcoded categories as default so they appear every time even if local storage is deleted
   const hasDefaultCategories = getInfo("hasDefaultCategories");
   if (!hasDefaultCategories) {
     setInfo("categories", defaultCategories);
